@@ -4,7 +4,7 @@ from demos.demo_properties import demo_properties
 
 if __name__ == "__main__":
     # Run the metrics demonstration
-    # demo_metrics()
+    demo_metrics()
 
     # Run the entropy demonstration
     # demo_entropy()
