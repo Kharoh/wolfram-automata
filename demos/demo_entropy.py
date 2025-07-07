@@ -12,8 +12,8 @@ def demo_entropy():
     """
 
     # --- Entropy Comparison Across Rule Categories ---
-    SIZE = 10
-    GENERATIONS = 20
+    SIZE = 20
+    GENERATIONS = 40
     N_RUNS = 500
     DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 

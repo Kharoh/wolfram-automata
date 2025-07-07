@@ -36,6 +36,9 @@ def run_entropy_experiment(
     max_entropy = size  # log2(2^size) = size
     min_entropy = 0.0
 
+    # Make entropy extensive by dividing by the number of cells
+    entropy_per_cell = entropy / size
+
     # Sort by probability (descending)
     sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     top_k = sorted_items[:plot_top_k]
@@ -57,9 +60,11 @@ def run_entropy_experiment(
     print(
         f"Rule {rule_number} (size={size}, generations={generations}, runs={n_runs}):"
     )
-    print(f"  Entropy: {entropy:.4f} (min: {min_entropy}, max: {max_entropy})")
+    print(
+        f"  Entropy per cell: {entropy_per_cell:.4f} (min: {min_entropy/size}, max: {max_entropy/size})"
+    )
     print(f"  Number of unique final configurations: {len(counts)} out of {2**size}")
-    return entropy
+    return entropy_per_cell
 
 
 if __name__ == "__main__":
