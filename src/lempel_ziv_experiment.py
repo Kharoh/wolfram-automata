@@ -9,6 +9,8 @@ def lempel_ziv_complexity(word):
     Computes the Lempel-Ziv complexity of a given word.
     Attention: This implementation corresponds to the original Lempel-Ziv algorithm,
     the candidate is searched in the prefix of the word, which is the extension minus the last character. It is not searched in simply word[:i] but in word[:i + v - 1].
+
+    I think the LZ77 variant is using word[:i] instead of word[:i + v - 1].
     """
     n = len(word)
     i = 0
