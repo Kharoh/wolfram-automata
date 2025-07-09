@@ -1,9 +1,8 @@
-import math
 import torch
 import numpy as np
 import matplotlib.pyplot as plt
-from collections import Counter
 from src.wolfram_ca import WolframCA
+from src.metrics import MetricsCalculator
 
 
 def run_entropy_experiment(
@@ -28,22 +27,16 @@ def run_entropy_experiment(
         final_state = history[-1].cpu().numpy()
         final_states.append(tuple(final_state.tolist()))
 
-    # Count occurrences of each unique final state
-    counts = Counter(final_states)
-    total = sum(counts.values())
-    probabilities = np.array([count / total for count in counts.values()])
-    entropy = -np.sum(probabilities * np.log2(probabilities))
-    max_entropy = size  # log2(2^size) = size
-    min_entropy = 0.0
-
-    # Make entropy extensive by dividing by the number of cells
-    entropy_per_cell = entropy / size
+    # Calculate entropy and related statistics
+    entropy_per_cell, counts, probabilities, min_entropy, max_entropy = (
+        MetricsCalculator.calculate_normalized_entropy(final_states, size)
+    )
 
     # Sort by probability (descending)
     sorted_items = sorted(counts.items(), key=lambda x: x[1], reverse=True)
     top_k = sorted_items[:plot_top_k]
     top_states = [np.array(state) for state, _ in top_k]
-    top_probs = [count / total for _, count in top_k]
+    top_probs = [count / sum(counts.values()) for _, count in top_k]
 
     # Plot the most probable configurations
     plt.figure(figsize=(2 * plot_top_k, 3))

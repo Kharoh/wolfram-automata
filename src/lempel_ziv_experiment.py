@@ -2,26 +2,7 @@ import torch
 import numpy as np
 import matplotlib.pyplot as plt
 from src.wolfram_ca import WolframCA
-
-
-def lempel_ziv_complexity(word):
-    """
-    Computes the Lempel-Ziv complexity of a given word.
-    Attention: This implementation corresponds to the original Lempel-Ziv algorithm,
-    the candidate is searched in the prefix of the word, which is the extension minus the last character. It is not searched in simply word[:i] but in word[:i + v - 1].
-
-    I think the LZ77 variant is using word[:i] instead of word[:i + v - 1].
-    """
-    n = len(word)
-    i = 0
-    count = 0
-    while i < n:
-        v = 1
-        while i + v <= n and word[i : i + v] in word[: i + v - 1]:
-            v += 1
-        count += 1
-        i += v
-    return count
+from src.metrics import MetricsCalculator
 
 
 def run_lempel_ziv_experiment(
@@ -47,7 +28,7 @@ def run_lempel_ziv_experiment(
         history = ca.run(generations=generations)
         final_state = history[-1].cpu().numpy()
         word = "".join(str(int(x)) for x in final_state)
-        complexity = lempel_ziv_complexity(word)
+        complexity = MetricsCalculator.calculate_lempel_ziv_complexity(word)
         normalized = complexity / size
         complexities.append(normalized)
     if plot:

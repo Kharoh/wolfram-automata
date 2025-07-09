@@ -32,7 +32,6 @@ def run_correlation_experiment(
         max_distance = min(20, size // 2)  # Calculate up to 20 or half the size
     else:
         max_distance = min(max_distance, 20, size // 2)
-    correlations_sum = defaultdict(float)
     all_final_states = []
     for _ in range(n_runs):
         ca = WolframCA(
@@ -40,13 +39,10 @@ def run_correlation_experiment(
         )
         history = ca.run(generations=generations)
         final_state = history[-1]
-        all_final_states.append(final_state.cpu().numpy())
-        for r in range(1, max_distance + 1):
-            corr = MetricsCalculator.calculate_correlation(final_state, r)
-            correlations_sum[r] += corr
-    avg_correlations = {
-        r: correlations_sum[r] / n_runs for r in range(1, max_distance + 1)
-    }
+        all_final_states.append(final_state)
+    avg_correlations = MetricsCalculator.calculate_average_correlation(
+        all_final_states, max_distance
+    )
 
     # Plotting: show automaton and correlation side by side
     if plot:
